@@ -1,7 +1,7 @@
 # pio-template-sr
 Survival Regression Template
 
-This PredictionIO template is based on AFT (accelerated failure time) algorithm described in [MLlib - Survival regression](https://spark.apache.org/docs/1.6.1/ml-classification-regression.html#survival-regression)
+This PredictionIO template is based on AFT (accelerated failure time) algorithm described in [MLlib - Survival regression](https://spark.apache.org/docs/1.6.1/ml-classification-regression.html#survival-regression) and in [API](https://spark.apache.org/docs/1.6.1/api/java/index.html?org/apache/spark/ml/regression/AFTSurvivalRegression.html)
 
 ## Prerequisites
 Template requires Spark 1.6.1 and PredictionIO 0.9.5.
