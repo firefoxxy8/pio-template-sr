@@ -23,10 +23,6 @@ case class Query(
 ) extends Serializable
 
 case class PredictedResult(
-  results: Array[Result]
-) extends Serializable
-
-case class Result(
   coefficients: Array[Double],
   intercept: Double,
   scale: Double,

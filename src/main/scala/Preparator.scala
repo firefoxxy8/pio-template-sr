@@ -18,16 +18,31 @@ package org.template.sr
 import io.prediction.controller.PPreparator
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import org.apache.spark.ml.feature.StandardScaler
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.ml.feature.StandardScalerModel
 
 class PreparedData(
-  val rows: RDD[(Double, Double, Array[Double])]
+  val rows: DataFrame,
+  val dsp: DataSourceParams,
+  val ssModel: StandardScalerModel
 ) extends Serializable
 
 class Preparator
   extends PPreparator[TrainingData, PreparedData] {
 
   def prepare(sc: SparkContext, trainingData: TrainingData): PreparedData = {
-    new PreparedData(rows = trainingData.rows)
+    if (trainingData.dsp.useStandardScaler) {
+      val training = trainingData.rows.toDF("label", "censor", "features")
+      val scaler = new StandardScaler().setInputCol("features").setOutputCol("scaledFeatures").setWithStd(trainingData.dsp.standardScalerWithStd).setWithMean(trainingData.dsp.standardScalerWithMean)
+      val scalerModel = scaler.fit(training)
+      val scaledData = scalerModel.transform(training)
+      val s1 = scaledData.select("label","censor","scaledFeatures").withColumnRenamed("scaledFeatures","features")
+      new PreparedData(rows = s1, dsp = trainingData.dsp, ssModel = scalerModel)
+    }
+    else {
+      new PreparedData(rows = trainingData.rows.toDF("label", "censor", "features"), dsp = trainingData.dsp)
+    }
   }
 }
 

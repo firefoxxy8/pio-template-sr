@@ -26,7 +26,12 @@ import org.apache.spark.rdd.RDD
 
 import grizzled.slf4j.Logger
 
-case class DataSourceParams(appName: String) extends Params
+case class DataSourceParams(
+  val appName: String, 
+  val useStandardScaler: Boolean,
+  val standardScalerWithStd: Boolean,
+  val standardScalerWithMean: Boolean 
+) extends Params
 
 class DataSource(val dsp: DataSourceParams)
   extends PDataSource[TrainingData, EmptyEvaluationInfo, Query, EmptyActualResult] {
@@ -50,10 +55,11 @@ class DataSource(val dsp: DataSourceParams)
           }
         }
       }
-    new TrainingData(rowsRDD)
+    new TrainingData(rowsRDD, dsp)
   }
 }
 
 class TrainingData(
-  val rows: RDD[(Double, Double, Array[Double])]
+  val rows: RDD[(Double, Double, Array[Double])],
+  val dsp: DataSourceParams
 ) extends Serializable

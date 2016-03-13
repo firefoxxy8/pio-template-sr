@@ -4,7 +4,10 @@
   "engineFactory": "org.template.sr.SREngine",
   "datasource": {
     "params" : {
-      "appName": "INVALID_APP_NAME"
+      "appName": "INVALID_APP_NAME",
+      "useStandardScaler": true,
+      "standardScalerWithStd": true,
+      "standardScalerWithMean": false
     }
   },
   "algorithms": [
@@ -14,9 +17,7 @@
         "quantileProbabilities": [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99],
         "fitIntercept": true,
         "maxIter": 100,
-        "convTolerance": 1e-6,
-        "ssWithStd": true,
-        "ssWithMean": false
+        "convTolerance": 1e-6
       }
     }
   ]
