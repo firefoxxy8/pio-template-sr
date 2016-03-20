@@ -34,7 +34,7 @@ case class AlgorithmParams(
 
 class SRModel(
   val aAFTSRModel: AFTSurvivalRegressionModel,
-  val ssModel: StandardScalerModel,
+  val ssModel: org.apache.spark.mllib.feature.StandardScalerModel,
   val useStandardScaler: Boolean
 ) extends Serializable {}
 
@@ -58,13 +58,13 @@ class SRAlgorithm(val ap: AlgorithmParams) extends P2LAlgorithm[PreparedData, SR
     } else {
       qryRow0
     }
-    val score = model.predict(qryRow)
-    val quantilesVec = model.predictQuantiles(qryRow)
+    val score = model.aAFTSRModel.predict(qryRow)
+    val quantilesVec = model.aAFTSRModel.predictQuantiles(qryRow)
 
-    PredictedResult(coefficients = model.coefficients(),
-                    intercept = model.intercept(),
-                    scale = model.scale(),
+    PredictedResult(coefficients = model.aAFTSRModel.coefficients.toArray,
+                    intercept = model.aAFTSRModel.intercept,
+                    scale = model.aAFTSRModel.scale,
                     prediction = score,
-                    quantiles = quantilesVec)
+                    quantiles = quantilesVec.toArray)
   }
 }
