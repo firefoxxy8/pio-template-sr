@@ -20,11 +20,23 @@ pio deploy --port 8000 &
 ```
 ## Test
 ```
-curl -i -X POST http://localhost:8000/queries.json -H "Content-Type: application/json" -d '{"features":[0.1, 0.2, 0.3]}'
+curl -i -X POST http://localhost:8000/queries.json -H "Content-Type: application/json" -d '{"features":[1.560,-0.605]}'
 ```
 Should give in result
 ```
-{"TODO"}
+{
+  "coefficients": [
+    -0.2633608588194104, 
+    0.22152319227842276
+  ], 
+  "intercept": 2.6380946151040012, 
+  "prediction": 5.718979487634966, 
+  "quantiles": [
+    1.1603238947151593, 
+    4.995456010274735
+  ], 
+  "scale": 1.5472345574364683
+}
 ```
 
 ## License

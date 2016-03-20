@@ -41,7 +41,7 @@ class Preparator
     import sqlContext.implicits._
 
     if (trainingData.dsp.useStandardScaler) {
-      val training = trainingData.rows.toDF("label", "censor", "features")
+      val training = trainingData.rows.map(x=>(x._1,x._2,Vectors.dense(x._3))).toDF("label", "censor", "features")
       val scaler = new StandardScaler().setInputCol("features").setOutputCol("scaledFeatures").setWithStd(trainingData.dsp.standardScalerWithStd).setWithMean(trainingData.dsp.standardScalerWithMean)
       val scalerModel = scaler.fit(training)
       val scaledData = scalerModel.transform(training)
@@ -54,7 +54,7 @@ class Preparator
       new PreparedData(rows = s1, dsp = trainingData.dsp, ssModel = oldSSModel)
     }
     else {
-      new PreparedData(rows = trainingData.rows.toDF("label", "censor", "features"), dsp = trainingData.dsp, ssModel = null)
+      new PreparedData(rows = trainingData.rows.map(x=>(x._1,x._2,Vectors.dense(x._3))).toDF("label", "censor", "features"), dsp = trainingData.dsp, ssModel = null)
     }
   }
 }
