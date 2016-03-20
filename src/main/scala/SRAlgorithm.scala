@@ -42,7 +42,7 @@ class SRAlgorithm(val ap: AlgorithmParams) extends P2LAlgorithm[PreparedData, SR
 
   @transient lazy val logger = Logger[this.type]
 
-  def train(sc: SparkContext, data: PreparedData): FPGModel = {
+  def train(sc: SparkContext, data: PreparedData): SRModel = {
     println("Training SR model.")
     val aft = new AFTSurvivalRegression().setQuantileProbabilities(ap.quantileProbabilities).setQuantilesCol("quantiles").setFitIntercept(ap.fitIntercept).setMaxIter(ap.maxIter).setTol(ap.convTolerance)
     val model = aft.fit(data.rows)
@@ -52,22 +52,19 @@ class SRAlgorithm(val ap: AlgorithmParams) extends P2LAlgorithm[PreparedData, SR
 
   def predict(model: SRModel, query: Query): PredictedResult = {
     // 
-    val qryRow0 = sqlContext.createDataFrame(Seq((1.0, Vectors.dense(query.features)))).toDF("censor", "features")
+    val qryRow0 = Vectors.dense(query.features)
     val qryRow = if (model.useStandardScaler) {
-      val scaledData = scalerModel.transform(qryRow0)
-      scaledData.select("label","censor","scaledFeatures").withColumnRenamed("scaledFeatures","features") 
+      model.ssModel.transform(qryRow0)
     } else {
       qryRow0
     }
-    val result = model.transform(qryRow)
-
-    val resPrediction = result.select("prediction")
-    val resQuantiles = result.select("quantiles").map(_.getAs[DenseVector](0)).first.toArray
+    val score = model.predict(qryRow)
+    val quantilesVec = model.predictQuantiles(qryRow)
 
     PredictedResult(coefficients = model.coefficients(),
                     intercept = model.intercept(),
                     scale = model.scale(),
-                    prediction = resPrediction,
-                    quantiles = resQuantiles)
+                    prediction = score,
+                    quantiles = quantilesVec)
   }
 }
