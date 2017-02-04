@@ -15,15 +15,13 @@ package org.template.sr
  * limitations under the License.
  */
 
-import io.prediction.controller.PPreparator
+import org.apache.predictionio.controller.PPreparator
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.ml.feature.StandardScaler
-//import org.apache.spark.mllib.feature.StandardScaler
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.ml.feature.StandardScalerModel
-//import org.apache.spark.mllib.feature.StandardScalerModel
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.mllib.linalg.Vectors
 
