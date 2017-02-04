@@ -8,7 +8,7 @@ Prebuilt docker image with required versions is available [here](https://hub.doc
 
 ## Deployment
 ```
-pio template get goliasz/pio-template-sr --version "0.4" sr1
+pio template get goliasz/pio-template-sr --version "0.5.1" sr1
 cd sr1
 pio build --verbose
 pio app new sr1 --access-key 1234
@@ -40,7 +40,7 @@ Should give in result
 
 ## Compatibility 
 
-0.5.0 - PIO v0.10.0-incubating
+0.5.1 - PIO v0.10.0-incubating
 
 0.4.1 - PIO v0.9.5
 
